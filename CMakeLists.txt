@@ -7,4 +7,12 @@ add_executable(rt_weekend main.cpp
         vec3.h
         color.h
         ray.cpp
-        ray.h)
+        ray.h
+        hittable.cpp
+        hittable.h
+        sphere.cpp
+        sphere.h
+        hittable_list.cpp
+        hittable_list.h
+        rtweekend.h
+)
