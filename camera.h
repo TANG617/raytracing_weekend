@@ -8,6 +8,7 @@
 #include "rtweekend.h"
 #include "fstream"
 #include "hittable.h"
+#include "material.h"
 
 class camera {
 public:
@@ -101,19 +102,29 @@ private:
         return ray(ray_origin,ray_direction);
     }
 
-    color ray_color(const ray& r,int depth,  const hittable& world) const {
+    color ray_color(const ray& r, int depth,  const hittable& world) const {
         if(depth<=0) return color(0,0,0);
         hit_record rec;
 
-        if (world.hit(r, interval(0.001, infinity), rec)) {
+        if (world.hit(r, interval(0.01, infinity), rec)) {
 //            return 0.5 * (rec.normal + color(1,1,1));
 //            vec3 direction = random_on_hemisphere(rec.normal);
-            vec3 direction = rec.normal + random_unit_vector();
-            return 0.5 * ray_color(ray(rec.p,direction),depth-1,world);
+
+//            vec3 direction = rec.normal + random_unit_vector();
+//            return 0.5 * ray_color(ray(rec.p,direction),depth-1,world);
+
+            ray scattered;
+            color attenuation;
+//            rec.mat = std::make_shared<material>(/* 构造函数参数 */);
+            if (rec.mat->scatter(r, rec, attenuation, scattered))
+                return attenuation * ray_color(scattered, depth-1, world);
+
+
+            return color(0,0,0);
         }
 
         vec3 unit_direction = unit_vector(r.direction());
-        auto a = 0.5*(unit_direction.y() + 1.0);
+        auto a = 0.1*(unit_direction.y() + 1.0);
         return (1.0-a)*color(1.0, 1.0, 1.0) + a*color(0.5, 0.7, 1.0);
     }
 };

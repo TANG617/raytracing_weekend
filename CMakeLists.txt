@@ -13,4 +13,5 @@ add_executable(rt_weekend main.cpp
         rtweekend.h
         interval.h
         camera.h
+        material.h
 )
